@@ -16,12 +16,14 @@ use shop_lib::{
 
 static MIGRATOR: Migrator = sqlx::migrate!("db/migrations");
 
+
 #[derive(RustEmbed)]
 #[folder = "public/"]
 struct Assets;
 
 #[tokio::main]
 async fn main() {
+    println!("Démarrage de l'application..");
     tracing_subscriber
         ::registry()
         .with(

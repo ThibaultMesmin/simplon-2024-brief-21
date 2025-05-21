@@ -1,0 +1,40 @@
+services:
+  app:
+    image: registry.nocturlab.fr/tmesmin/imageshop
+    depends_on:
+      - db
+    networks:
+      - traefik
+      - db
+    environment:
+      HOST : 0.0.0.0
+      POSTGRES_HOST: db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: app
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.tmesminshop.rule=Host(`tmesminshop.nocturlab.fr`)"
+      - "traefik.http.services.tmesminshop.loadbalancer.server.port=8080"
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: app
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - app
+      - db
+
+volumes:
+    pg_data:
+
+networks:
+  app:
+  db:
+  traefik:
+    name: traefik_default
+    external: true
